@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from db import Base
+from .category import Category
 
 
 class Item(Base):
@@ -9,6 +10,7 @@ class Item(Base):
     title = Column(String)
     description = Column(String)
     images = relationship("image")
+    category_id = Column(String, ForeignKey("category.id"))
     latitude = Column(Float)
     longitude = Column(Float)
 

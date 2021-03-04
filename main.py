@@ -32,6 +32,7 @@ if __name__ == '__main__':
     config.load_config("config.yaml")
 
     create_db()
+
     # TODO zakomentuj ked nechces pustat migrations
     make_migrations()
     migrate()
