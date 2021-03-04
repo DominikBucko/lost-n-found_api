@@ -5,6 +5,5 @@ from db import Base
 
 class Category(Base):
     __tablename__ = "category"
-    id = Column(String, primary_key=True)
-    item = relationship("item")
-    name = Column(String)
+    name = Column(String, primary_key=True)
+    item = relationship("items")

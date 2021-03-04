@@ -9,8 +9,14 @@ class Item(Base):
     id = Column(String, primary_key=True)
     title = Column(String)
     description = Column(String)
-    images = relationship("image")
-    category_id = Column(String, ForeignKey("category.id"))
     latitude = Column(Float)
     longitude = Column(Float)
+
+    images = relationship("image")
+    category_id = Column(String, ForeignKey("category.name"))
+
+    tags = relationship(
+        "tag",
+        secondary="tag_item",
+        back_populates="items")
 
