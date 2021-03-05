@@ -22,17 +22,134 @@ messageModel = ns.model(
     }
 )
 
+itemCreateModel = ns.model(
+    "createdItem",
+    {
+        "title": fields.String,
+        "description": fields.String,
+        "latitude": fields.Float,
+        "longitude": fields.Float,
+        "category": fields.String,
+        "tags": fields.List(fields.String),
+        "images": fields.List(fields.String),
+    }
+)
 
-@ns.route("/lost")
+
+itemFetchModel = ns.model(
+    "fetchItem",
+    {
+        "id": fields.String,
+        "title": fields.String,
+        "description": fields.String,
+        "latitude": fields.Float,
+        "longitude": fields.Float,
+        "category": fields.String,
+        "tags": fields.List(fields.String),
+        "images": fields.List(fields.Url),
+    }
+)
+
+itemBulkFetchModel = ns.model(
+    "items",
+    {
+        "items": fields.List(fields.Nested(itemFetchModel))
+    }
+)
+
+
+# @ns.route("/lost")
 class LostItems(Resource):
-    @ns.response(code=200, model=messageModel, description="OK")
-    @ns.response(code=500, description="Internal Server Error")
-    @ns.doc(description="Fetch owners lost items.")
+    # @ns.marshal_with(messageModel)
+    @ns.doc(
+        description="Fetch owners lost items.",
+        params={},
+        responses={
+            200: "OK",
+            400: "Bad request",
+            401: "Unauthorized",
+        },
+    )
+    @ns.response(200, "OK", itemBulkFetchModel)
+    # @ns.response(code=200, model=messageModel, description="OK")
+
     @authenticate
     def get(self):
         pass
+
+    # @ns.marshal_with(itemFetchModel)
+    @ns.doc(
+        description="Create record of a lost item",
+        params={},
+        responses={
+            200: "OK",
+            400: "Bad request",
+            401: "Unauthorized",
+        },
+    )
+    @ns.response(200, "OK", itemFetchModel)
+    @ns.expect(itemCreateModel)
+    @authenticate
+    def post(self):
+        pass
+
+
+# @ns.route("/lost/<item_id>")
+class LostSingleItem(Resource):
+    # @ns.marshal_with(itemFetchModel)
+    @ns.doc(
+        description="Fetch owners lost items.",
+        params={},
+        responses={
+            200: "OK",
+            404: "Not found",
+            400: "Bad request",
+            401: "Unauthorized",
+        },
+    )
+    @ns.response(200, "OK", itemFetchModel)
+    @authenticate
+    def get(self, item_id):
+        pass
+
+    @ns.doc(
+        description="Update record of a lost item.",
+        params={},
+        responses={
+            200: "OK",
+            404: "Not found",
+            400: "Bad request",
+            401: "Unauthorized",
+        },
+    )
+    @ns.response(200, "OK", itemFetchModel)
+    @ns.expect(itemCreateModel)
+    @authenticate
+    def patch(self, item_id):
+        pass
+
+    @ns.doc(
+        description="Delete record of a lost item.",
+        params={},
+        responses={
+            200: "OK",
+            404: "Not found",
+            400: "Bad request",
+            401: "Unauthorized",
+        },
+    )
+    @ns.response(200, "OK", messageModel)
+    @authenticate
+    def delete(self, item_id):
+        pass
+
+
 
 
 @ns.route("/found")
 class FoundItems(Resource):
     pass
+
+
+ns.add_resource(LostItems, "/lost")
+ns.add_resource(LostSingleItem, "/lost/<item_id>")
