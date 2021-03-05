@@ -5,10 +5,11 @@ from db import Base
 
 
 class Tag(Base):
-    __tablename__ = "tag"
+    __tablename__ = "tags"
     name = Column(String, primary_key=True)
+    # item = relationship("items")
 
     items = relationship(
-        "item",
+        "items",
         secondary='tag_item',
         back_populates="tags")
