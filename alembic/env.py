@@ -1,7 +1,7 @@
 from logging.config import fileConfig
 from db import engine as connectable
 from db import Base
-from models import user, image, item, found_item, lost_item
+from models import user, image, item, found_item, lost_item, matches, tag_item, tag
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool

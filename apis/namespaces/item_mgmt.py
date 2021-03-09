@@ -6,9 +6,6 @@ import logging
 logger = logging.getLogger(__name__)
 ns = Namespace("items", description="API for management of lost & found items", url_prefix="/api")
 
-# BOL SOM NASRATY ZE MI NEJDE TO MANY TO MANY TAK SOM SKUSAL SPRAVIT TOTO ALE ESTE
-#  VIAC SOM SA NASRAL LEBO MI NESLO SPRAVIT LIST :D
-
 messageModel = ns.model(
     "item", {
         "category": fields.String,
@@ -34,7 +31,6 @@ itemCreateModel = ns.model(
         "images": fields.List(fields.String),
     }
 )
-
 
 itemFetchModel = ns.model(
     "fetchItem",
@@ -144,12 +140,42 @@ class LostSingleItem(Resource):
         pass
 
 
-
-
 @ns.route("/found")
 class FoundItems(Resource):
-    pass
+    # @ns.marshal_with(messageModel)
+    @ns.doc(
+        description="Fetch owners lost items.",
+        params={},
+        responses={
+            200: "OK",
+            400: "Bad request",
+            401: "Unauthorized",
+        },
+    )
+    @ns.response(200, "OK", itemBulkFetchModel)
+    # @ns.response(code=200, model=messageModel, description="OK")
+
+    @authenticate
+    def get(self):
+        pass
+
+    # @ns.marshal_with(itemFetchModel)
+    @ns.doc(
+        description="Create record of a lost item",
+        params={},
+        responses={
+            200: "OK",
+            400: "Bad request",
+            401: "Unauthorized",
+        },
+    )
+    @ns.response(200, "OK", itemFetchModel)
+    @ns.expect(itemCreateModel)
+    @authenticate
+    def post(self):
+        pass
 
 
-ns.add_resource(LostItems, "/lost")
-ns.add_resource(LostSingleItem, "/lost/<item_id>")
+# ns.add_resource(LostItems, "/lost")
+# ns.add_resource(LostSingleItem, "/lost/<item_id>")
+# ns.add_resource(FoundItems, "/found")
