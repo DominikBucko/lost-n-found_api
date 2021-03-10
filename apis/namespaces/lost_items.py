@@ -4,7 +4,7 @@ from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, ma
 import logging
 
 logger = logging.getLogger(__name__)
-ns = Namespace("items", description="API for management of lost & found items", url_prefix="/api")
+ns = Namespace("lost_items", description="API for management of lost & found items", url_prefix="/api")
 
 messageModel = ns.model(
     "item", {
@@ -58,7 +58,7 @@ itemBulkFetchModel = ns.model(
 class LostItems(Resource):
     # @ns.marshal_with(messageModel)
     @ns.doc(
-        description="Fetch owners lost items.",
+        description="Fetch owners items.",
         params={},
         responses={
             200: "OK",
@@ -75,7 +75,7 @@ class LostItems(Resource):
 
     # @ns.marshal_with(itemFetchModel)
     @ns.doc(
-        description="Create record of a lost item",
+        description="Create record of item",
         params={},
         responses={
             200: "OK",
@@ -94,7 +94,7 @@ class LostItems(Resource):
 class LostSingleItem(Resource):
     # @ns.marshal_with(itemFetchModel)
     @ns.doc(
-        description="Fetch owners lost items.",
+        description="Fetch owners items.",
         params={},
         responses={
             200: "OK",
@@ -109,7 +109,7 @@ class LostSingleItem(Resource):
         pass
 
     @ns.doc(
-        description="Update record of a lost item.",
+        description="Update record of item.",
         params={},
         responses={
             200: "OK",
@@ -125,7 +125,7 @@ class LostSingleItem(Resource):
         pass
 
     @ns.doc(
-        description="Delete record of a lost item.",
+        description="Delete record of item.",
         params={},
         responses={
             200: "OK",
@@ -140,42 +140,16 @@ class LostSingleItem(Resource):
         pass
 
 
-@ns.route("/found")
-class FoundItems(Resource):
-    # @ns.marshal_with(messageModel)
-    @ns.doc(
-        description="Fetch owners lost items.",
-        params={},
-        responses={
-            200: "OK",
-            400: "Bad request",
-            401: "Unauthorized",
-        },
-    )
-    @ns.response(200, "OK", itemBulkFetchModel)
-    # @ns.response(code=200, model=messageModel, description="OK")
+# # @ns.route("/found")
+# class FoundItems(LostItems):
+#     def __init__(self):
+#         super(FoundItems, self).__init__()
+#
+# class FoundSingleItem(LostSingleItem):
+#     def __init__(self):
+#         super(FoundSingleItem, self).__init__()
 
-    @authenticate
-    def get(self):
-        pass
-
-    # @ns.marshal_with(itemFetchModel)
-    @ns.doc(
-        description="Create record of a lost item",
-        params={},
-        responses={
-            200: "OK",
-            400: "Bad request",
-            401: "Unauthorized",
-        },
-    )
-    @ns.response(200, "OK", itemFetchModel)
-    @ns.expect(itemCreateModel)
-    @authenticate
-    def post(self):
-        pass
-
-
-# ns.add_resource(LostItems, "/lost")
-# ns.add_resource(LostSingleItem, "/lost/<item_id>")
+ns.add_resource(LostItems, "/lost")
+ns.add_resource(LostSingleItem, "/lost/<item_id>")
 # ns.add_resource(FoundItems, "/found")
+# ns.add_resource(FoundSingleItem, "/found/<item_id>")
