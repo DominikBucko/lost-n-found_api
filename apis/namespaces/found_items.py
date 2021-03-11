@@ -16,5 +16,5 @@ class FoundSingleItem(LostSingleItem):
     def __init__(self):
         super(FoundSingleItem, self).__init__()
 
-ns.add_resource(FoundItems, "/found")
-ns.add_resource(FoundSingleItem, "/found/<item_id>")
+ns.add_resource(FoundItems, "")
+ns.add_resource(FoundSingleItem, "/<item_id>")

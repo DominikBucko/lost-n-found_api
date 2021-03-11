@@ -4,7 +4,7 @@ from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, ma
 import logging
 
 logger = logging.getLogger(__name__)
-ns = Namespace("lost_items", description="API for management of lost & found items", url_prefix="/api")
+ns = Namespace("lost_items", description="API for management of lost items", url_prefix="/api")
 
 messageModel = ns.model(
     "item", {
@@ -149,7 +149,7 @@ class LostSingleItem(Resource):
 #     def __init__(self):
 #         super(FoundSingleItem, self).__init__()
 
-ns.add_resource(LostItems, "/lost")
-ns.add_resource(LostSingleItem, "/lost/<item_id>")
+ns.add_resource(LostItems, "")
+ns.add_resource(LostSingleItem, "/<item_id>")
 # ns.add_resource(FoundItems, "/found")
 # ns.add_resource(FoundSingleItem, "/found/<item_id>")

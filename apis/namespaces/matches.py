@@ -59,7 +59,7 @@ class MatchSingleItem(Resource):
         pass
 
     @ns.doc(
-        description="Update record of item.",
+        description="Update record of match.",
         params={},
         responses={
             200: "OK",
@@ -74,5 +74,5 @@ class MatchSingleItem(Resource):
     def patch(self, item_id):
         pass
 
-ns.add_resource(MatchItem, "/matches")
-ns.add_resource(MatchSingleItem, "/matches/<item_id>")
+ns.add_resource(MatchItem, "")
+ns.add_resource(MatchSingleItem, "/<item_id>")
