@@ -6,16 +6,23 @@ import logging
 logger = logging.getLogger(__name__)
 ns = Namespace("lost_items", description="API for management of lost items", url_prefix="/api")
 
+# messageModel = ns.model(
+#     "item", {
+#         "category": fields.String,
+#         "brand": fields.String,
+#         "title": fields.String,
+#         "description": fields.String,
+#         "GPS-lat": fields.Float,
+#         "GPS-lon": fields.Float,
+#         "images": fields.List(fields.String, description='image')
+#         # "images": fields.List(fields.Nested(image)),
+#     }
+# )
+
 messageModel = ns.model(
-    "item", {
-        "category": fields.String,
-        "brand": fields.String,
-        "title": fields.String,
-        "description": fields.String,
-        "GPS-lat": fields.Float,
-        "GPS-lon": fields.Float,
-        "images": fields.List(fields.String, description='image')
-        # "images": fields.List(fields.Nested(image)),
+    "message",
+    {
+    "message": fields.String
     }
 )
 
@@ -47,7 +54,7 @@ itemFetchModel = ns.model(
 )
 
 itemBulkFetchModel = ns.model(
-    "items",
+    "fetchItems",
     {
         "items": fields.List(fields.Nested(itemFetchModel))
     }
@@ -118,7 +125,7 @@ class LostSingleItem(Resource):
             401: "Unauthorized",
         },
     )
-    @ns.response(200, "OK", itemFetchModel)
+    @ns.response(200, "OK", messageModel)
     @ns.expect(itemCreateModel)
     @authenticate
     def patch(self, item_id):
