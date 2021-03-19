@@ -6,4 +6,4 @@ class FoundItem(Item):
     __tablename__ = "found"
     uid = Column(String, ForeignKey('items.id'), primary_key=True)
     owner_id = Column(String, ForeignKey("users.email"))
-    matches_f = relationship("Matches", back_populates="found")
+    matches_f = relationship("Matches")

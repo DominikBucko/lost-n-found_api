@@ -1,7 +1,7 @@
 import config
 from app import app, initialize_api
 from db import Base, engine
-from models import user, image, item, found_item, lost_item
+from models import user, image, item, found_item, lost_item, matches
 
 
 def migrate():

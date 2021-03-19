@@ -6,4 +6,4 @@ from db import Base
 class Category(Base):
     __tablename__ = "category"
     name = Column(String, primary_key=True)
-    item = relationship("items")
+    item = relationship("Item")

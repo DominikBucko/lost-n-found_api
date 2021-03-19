@@ -2,6 +2,8 @@ from flask import request, json
 from auth.auth import authenticate
 from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, marshal_with, abort, marshal
 import logging
+from views import *
+from views import lost_items
 
 logger = logging.getLogger(__name__)
 ns = Namespace("lost_items", description="API for management of lost items", url_prefix="/api")
@@ -78,6 +80,8 @@ class LostItems(Resource):
 
     @authenticate
     def get(self):
+        print("")
+        lost_items.get_all()
         pass
 
     # @ns.marshal_with(itemFetchModel)
@@ -94,6 +98,7 @@ class LostItems(Resource):
     @ns.expect(itemCreateModel)
     @authenticate
     def post(self):
+        lost_items.post()
         pass
 
 
@@ -147,16 +152,5 @@ class LostSingleItem(Resource):
         pass
 
 
-# # @ns.route("/found")
-# class FoundItems(LostItems):
-#     def __init__(self):
-#         super(FoundItems, self).__init__()
-#
-# class FoundSingleItem(LostSingleItem):
-#     def __init__(self):
-#         super(FoundSingleItem, self).__init__()
-
 ns.add_resource(LostItems, "")
 ns.add_resource(LostSingleItem, "/<item_id>")
-# ns.add_resource(FoundItems, "/found")
-# ns.add_resource(FoundSingleItem, "/found/<item_id>")

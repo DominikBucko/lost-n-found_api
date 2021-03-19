@@ -8,10 +8,10 @@ class Matches(Base):
     id = Column(String, primary_key=True)
 
     lost_id = Column(String, ForeignKey("lost.uid"))
-    lost = relationship("LostItem", back_populates="matches_l")
+    # lost_m = relationship("LostItem", back_populates="matches_l")
 
     found_id = Column(String, ForeignKey("found.uid"))
-    found = relationship("FoundItem", back_populates="matches_f")
+    # found_m = relationship("FoundItem", back_populates="matches_f")
 
     percentage = Column(Float)
 

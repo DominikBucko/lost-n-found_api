@@ -7,5 +7,4 @@ class LostItem(Item):
     __tablename__ = "lost"
     uid = Column(String, ForeignKey('items.id'), primary_key=True)
     owner_id = Column(String, ForeignKey("users.email"))
-    matches_l = relationship("Matches", back_populates="lost")
-
+    matches_l = relationship("Matches")
