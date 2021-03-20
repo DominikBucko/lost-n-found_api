@@ -1,18 +1,14 @@
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, Binary, Float
 from db import Base
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
 
 
 class Matches(Base):
     __tablename__ = "match"
-    id = Column(String, primary_key=True)
-
-    lost_id = Column(String, ForeignKey("lost.uid"))
-    # lost_m = relationship("LostItem", back_populates="matches_l")
-
-    found_id = Column(String, ForeignKey("found.uid"))
-    # found_m = relationship("FoundItem", back_populates="matches_f")
-
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    item1_id = Column(UUID(as_uuid=True), ForeignKey("items.id"))
+    item2_id = Column(UUID(as_uuid=True), ForeignKey("items.id"))
     percentage = Column(Float)
-
     status = Column(String)

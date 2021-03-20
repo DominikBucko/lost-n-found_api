@@ -1,7 +1,8 @@
 import config
 from app import app, initialize_api
 from db import Base, engine
-from models import user, image, item, found_item, lost_item, matches
+from fill_db import fill_db
+from models import user, image, item, matches
 
 
 def migrate():
@@ -36,6 +37,9 @@ if __name__ == '__main__':
     # TODO zakomentuj ked nechces pustat migrations
     # make_migrations()
     # migrate()
+
+    # DB FILL
+    # fill_db()
 
     initialize_api()
     app.run(host="::", port=config.config.port)

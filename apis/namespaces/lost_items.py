@@ -36,7 +36,6 @@ itemCreateModel = ns.model(
         "latitude": fields.Float,
         "longitude": fields.Float,
         "category": fields.String,
-        "tags": fields.List(fields.String),
         "images": fields.List(fields.String),
     }
 )
@@ -50,7 +49,6 @@ itemFetchModel = ns.model(
         "latitude": fields.Float,
         "longitude": fields.Float,
         "category": fields.String,
-        "tags": fields.List(fields.String),
         "images": fields.List(fields.Url),
     }
 )
@@ -65,7 +63,7 @@ itemBulkFetchModel = ns.model(
 
 # @ns.route("/lost")
 class LostItems(Resource):
-    # @ns.marshal_with(messageModel)
+    @ns.marshal_with(itemBulkFetchModel)
     @ns.doc(
         description="Fetch owners items.",
         params={},
@@ -80,9 +78,7 @@ class LostItems(Resource):
 
     @authenticate
     def get(self):
-        print("")
-        lost_items.get_all()
-        pass
+        return lost_items.get_all()
 
     # @ns.marshal_with(itemFetchModel)
     @ns.doc(
@@ -98,13 +94,12 @@ class LostItems(Resource):
     @ns.expect(itemCreateModel)
     @authenticate
     def post(self):
-        lost_items.post()
-        pass
+        return lost_items.post()
 
 
 # @ns.route("/lost/<item_id>")
 class LostSingleItem(Resource):
-    # @ns.marshal_with(itemFetchModel)
+    @ns.marshal_with(itemFetchModel)
     @ns.doc(
         description="Fetch owners items.",
         params={},
@@ -118,7 +113,7 @@ class LostSingleItem(Resource):
     @ns.response(200, "OK", itemFetchModel)
     @authenticate
     def get(self, item_id):
-        pass
+        return lost_items.get_id(item_id)
 
     @ns.doc(
         description="Update record of item.",
