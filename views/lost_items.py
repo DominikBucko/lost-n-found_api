@@ -14,6 +14,7 @@ def get_all():
 
     jsondata = []
     for item in items:
+        item.id = str(item.id)
         jsondata.append(json.loads(json.dumps(item.__dict__, default=lambda o: "", indent=4)))
 
     return Response({"items": jsondata}, status=200)
@@ -46,5 +47,5 @@ def post():
 
 def get_id(id):
     item = session.query(Item).get(id)
-    print(type(item.id))
+    item.id = str(item.id)
     return json.loads(json.dumps(item.__dict__, default=lambda o: "", indent=4))
