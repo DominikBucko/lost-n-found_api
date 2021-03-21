@@ -15,7 +15,6 @@ def init(app):
               base_url="/api"
               )
     app.register_blueprint(blueprint)
-    
     api.add_namespace(item_mgmt)
     api.add_namespace(found_items)
     api.add_namespace(matches)

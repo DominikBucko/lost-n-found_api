@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from marshmallow import Schema
 from db import Base
 import enum
 import uuid
@@ -23,3 +24,10 @@ class Item(Base):
     category = Column(String, ForeignKey("category.name"))
     status = Column(String)
     owner_id = Column(String, ForeignKey("users.email"))
+
+
+class ItemSchema(Schema):
+    class Meta:
+        # model = Item
+        fields = ('id', 'title', 'description', 'latitude', 'longitude', 'type',
+                  'images', 'category', 'status', 'owner_id')

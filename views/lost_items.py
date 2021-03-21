@@ -1,5 +1,6 @@
-from models.item import Item
-from models.category import Category
+from models.item import Item\
+    , ItemSchema
+# from models.category import Category
 from flask import Response, request
 from sqlalchemy.orm import sessionmaker
 from db import Base, engine
@@ -11,13 +12,14 @@ session = Session()
 
 def get_all():
     items = session.query(Item).all()
+    items_schema = ItemSchema(many=True)
+    return items_schema.dump(items)
 
-    jsondata = []
-    for item in items:
-        item.id = str(item.id)
-        jsondata.append(json.loads(json.dumps(item.__dict__, default=lambda o: "", indent=4)))
-
-    return Response({"items": jsondata}, status=200)
+    # jsondata = []
+    # for item in items:
+    #     item.id = str(item.id)
+    #     jsondata.append(json.loads(json.dumps(item.__dict__, default=lambda o: "", indent=4)))
+    # return Response({"items": jsondata}, status=200)
 
 
 def post():
@@ -38,12 +40,13 @@ def post():
         item.longitude = longitude
 
     for image in images:
-        #TODO, update item_id-s in image
+        # TODO, update item_id-s in image
         pass
 
     session.add(item)
     session.commit()
     return Response(status=200)
+
 
 def get_id(id):
     item = session.query(Item).get(id)
