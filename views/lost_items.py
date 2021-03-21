@@ -15,14 +15,10 @@ def get_all():
     items_schema = ItemSchema(many=True)
     return items_schema.dump(items)
 
-    # jsondata = []
-    # for item in items:
-    #     item.id = str(item.id)
-    #     jsondata.append(json.loads(json.dumps(item.__dict__, default=lambda o: "", indent=4)))
-    # return Response({"items": jsondata}, status=200)
-
 
 def post():
+    item_schema = ItemSchema()
+
     title = request.form.get('title')
     category = request.form.get('category')
     description = request.form.get('description', None)
@@ -45,10 +41,10 @@ def post():
 
     session.add(item)
     session.commit()
-    return Response(status=200)
+    return item_schema.dump(item)
 
 
 def get_id(id):
     item = session.query(Item).get(id)
-    item.id = str(item.id)
-    return json.loads(json.dumps(item.__dict__, default=lambda o: "", indent=4))
+    item_schema = ItemSchema()
+    return item_schema.dump(item)

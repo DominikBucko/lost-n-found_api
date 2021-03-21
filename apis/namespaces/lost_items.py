@@ -63,7 +63,7 @@ itemBulkFetchModel = ns.model(
 
 # @ns.route("/lost")
 class LostItems(Resource):
-    # @ns.marshal_with(itemBulkFetchModel)
+    @ns.marshal_with(itemFetchModel)
     @ns.doc(
         description="Fetch owners items.",
         params={},
