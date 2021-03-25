@@ -4,22 +4,11 @@ from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, ma
 import logging
 from views import *
 from views import lost_items
+from sqlalchemy.exc import *
+from sqlalchemy.orm.exc import NoResultFound
 
 logger = logging.getLogger(__name__)
-ns = Namespace("lost_items", description="API for management of lost items", url_prefix="/api")
-
-# messageModel = ns.model(
-#     "item", {
-#         "category": fields.String,
-#         "brand": fields.String,
-#         "title": fields.String,
-#         "description": fields.String,
-#         "GPS-lat": fields.Float,
-#         "GPS-lon": fields.Float,
-#         "images": fields.List(fields.String, description='image')
-#         # "images": fields.List(fields.Nested(image)),
-#     }
-# )
+ns = Namespace("items/lost", description="API for management of lost items", url_prefix="/api")
 
 messageModel = ns.model(
     "message",
@@ -36,7 +25,6 @@ itemCreateModel = ns.model(
         "latitude": fields.Float,
         "longitude": fields.Float,
         "category": fields.String,
-        "images": fields.List(fields.String),
     }
 )
 
@@ -80,7 +68,7 @@ class LostItems(Resource):
     def get(self):
         return lost_items.get_all()
 
-    # @ns.marshal_with(itemFetchModel)
+    @ns.marshal_with(itemFetchModel)
     @ns.doc(
         description="Create record of item",
         params={},
@@ -94,7 +82,12 @@ class LostItems(Resource):
     @ns.expect(itemCreateModel)
     @authenticate
     def post(self):
-        return lost_items.post()
+        try:
+            return lost_items.create_new(request.get_json())
+        except SQLAlchemyError:
+            abort(400, "Bad request")
+        except NoReferenceError:
+            abort(400, "Non-existent category")
 
 
 # @ns.route("/lost/<item_id>")
@@ -113,7 +106,11 @@ class LostSingleItem(Resource):
     @ns.response(200, "OK", itemFetchModel)
     @authenticate
     def get(self, item_id):
-        return lost_items.get_id(item_id)
+        try:
+            return lost_items.get_id(item_id)
+        except SQLAlchemyError:
+            abort(404, "No result.")
+
 
     @ns.doc(
         description="Update record of item.",

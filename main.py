@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     # TODO zakomentuj ked nechces pustat migrations
     # make_migrations()
-    # migrate()
+    migrate()
 
     # DB FILL
     # fill_db()

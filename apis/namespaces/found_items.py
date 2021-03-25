@@ -6,7 +6,7 @@ from .lost_items import LostItems, LostSingleItem
 
 
 logger = logging.getLogger(__name__)
-ns = Namespace("found_items", description="API for management of found items", url_prefix="/api")
+ns = Namespace("items/found", description="API for management of found items", url_prefix="/api")
 
 
 # @ns.route("/found")
@@ -22,3 +22,4 @@ class FoundSingleItem(LostSingleItem):
 
 ns.add_resource(FoundItems, "")
 ns.add_resource(FoundSingleItem, "/<item_id>")
+

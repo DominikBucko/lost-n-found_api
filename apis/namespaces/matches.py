@@ -5,7 +5,7 @@ import logging
 from .lost_items import itemFetchModel
 
 logger = logging.getLogger(__name__)
-ns = Namespace("matches", description="API for management of found items", url_prefix="/api")
+ns = Namespace("items/matches", description="API for management of found items", url_prefix="/api")
 
 # @ns.route("/found")
 matchesFetchModel = ns.model(

@@ -12,7 +12,17 @@ class ItemType(enum.Enum):
     lost = 2
 
 
+class ItemStatus(enum.Enum):
+    open = 1
+    resolved = 2
+    Tested = 3
+
+
 class Item(Base):
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     __tablename__ = "items"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String)
@@ -22,7 +32,7 @@ class Item(Base):
     type = Column(Enum(ItemType))
     images = relationship("Image")
     category = Column(String, ForeignKey("category.name"))
-    status = Column(String)
+    status = Column(Enum(ItemStatus))
     owner_id = Column(String, ForeignKey("users.email"))
 
 
@@ -31,3 +41,5 @@ class ItemSchema(Schema):
         # model = Item
         fields = ('id', 'title', 'description', 'latitude', 'longitude', 'type',
                   'images', 'category', 'status', 'owner_id')
+
+
