@@ -4,7 +4,6 @@ from misc import ObjectView
 
 config = ObjectView({})
 
-
 def load_config(filename):
     with open(filename) as conf:
         global config

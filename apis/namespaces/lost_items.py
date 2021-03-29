@@ -51,7 +51,7 @@ itemBulkFetchModel = ns.model(
 
 # @ns.route("/lost")
 class LostItems(Resource):
-    @ns.marshal_with(itemFetchModel)
+    # @ns.marshal_with(itemBulkFetchModel)
     @ns.doc(
         description="Fetch owners items.",
         params={},
@@ -66,7 +66,10 @@ class LostItems(Resource):
 
     @authenticate
     def get(self):
-        return lost_items.get_all()
+        items = lost_items.get_all()
+        if not items:
+            return {"items": []}
+        return marshal({"items": items}, itemBulkFetchModel), 200
 
     @ns.marshal_with(itemFetchModel)
     @ns.doc(

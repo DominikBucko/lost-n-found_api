@@ -17,8 +17,12 @@ Session = sessionmaker(bind=engine)
 
 def get_all():
     session = Session()
-    items = session.query(Item).all()
-    items_schema = ItemSchema(many=True)
+    try:
+        items = session.query(Item).all()
+        items_schema = ItemSchema(many=True)
+    except Exception:
+        return {}
+
     return items_schema.dump(items)
 
 
@@ -32,7 +36,8 @@ def create_new(data):
     # longitude = request.form.get('longitude', None)
     # images = request.form.getlist('images')
     # data["category"] = session.query(Category).get(data["category"])
-
+    data["type"] = "lost"
+    data["status"] = "open"
     item = Item(**data)
 
     # if description is not None:
@@ -63,7 +68,9 @@ def find_matches(item):
     session = Session()
     res = session.query(Item).filter(Item.category == item.category,
                                      Item.status == ItemStatus.open,
-                                     Item.type == ItemType.found)
+                                     Item.type == ItemType.lost
+                                     )
+    # res = session.query(Item).all()
     for row in res:
         distance = get_distance(item.latitude, item.longitude, row.latitude, row.longitude)
         if distance < 500:
