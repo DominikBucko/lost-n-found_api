@@ -14,11 +14,10 @@ import json
 Session = sessionmaker(bind=engine)
 
 
-
 def get_all():
     session = Session()
     try:
-        items = session.query(Item).all()
+        items = session.query(Item).filter(Item.type == ItemType.lost)
         items_schema = ItemSchema(many=True)
     except Exception:
         return {}
@@ -28,24 +27,10 @@ def get_all():
 
 def create_new(data):
     session = Session()
-
-    # title = request.form.get('title')
-    # category = request.form.get('category')
-    # description = request.form.get('description', None)
-    # latitude = request.form.get('latitude', None)
-    # longitude = request.form.get('longitude', None)
-    # images = request.form.getlist('images')
-    # data["category"] = session.query(Category).get(data["category"])
+    item_schema = ItemSchema(many=False)
     data["type"] = "lost"
     data["status"] = "open"
     item = Item(**data)
-
-    # if description is not None:
-    #     item.description = description
-    #
-    # if latitude is not None and longitude is not None:
-    #     item.latitude = latitude
-    #     item.longitude = longitude
     #
     # for image in images:
     #     # TODO, update item_id-s in image
@@ -54,14 +39,16 @@ def create_new(data):
     session.add(item)
     session.commit()
     find_matches(item)
-    return item.as_dict()
-    # return item_schema.dump(item)
+    # return item.as_dict()
+    return item_schema.dump(item)
 
 
 def get_id(id):
     session = Session()
+    item_schema = ItemSchema(many=False)
     item = session.query(Item).get(id)
-    return item.as_dict()
+    # return item.as_dict()
+    return item_schema.dump(item)
 
 
 def find_matches(item):
@@ -74,7 +61,7 @@ def find_matches(item):
     for row in res:
         distance = get_distance(item.latitude, item.longitude, row.latitude, row.longitude)
         if distance < 500:
-            match = Matches(item1_id=row.id, item2_id=item.id, percentage=(100 - distance/10))
+            match = Matches(found_id=row.id, lost_id=item.id, percentage=(100 - distance/10))
             session.add(match)
 
     session.commit()

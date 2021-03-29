@@ -37,7 +37,7 @@ itemFetchModel = ns.model(
         "latitude": fields.Float,
         "longitude": fields.Float,
         "category": fields.String,
-        "images": fields.List(fields.Url),
+        "images": fields.List(fields.String),
     }
 )
 
@@ -71,7 +71,7 @@ class LostItems(Resource):
             return {"items": []}
         return marshal({"items": items}, itemBulkFetchModel), 200
 
-    @ns.marshal_with(itemFetchModel)
+    # @ns.marshal_with(itemFetchModel)
     @ns.doc(
         description="Create record of item",
         params={},
@@ -86,7 +86,8 @@ class LostItems(Resource):
     @authenticate
     def post(self):
         try:
-            return lost_items.create_new(request.get_json())
+            item = lost_items.create_new(request.get_json())
+            return marshal(item, itemFetchModel), 200
         except SQLAlchemyError:
             abort(400, "Bad request")
         except NoReferenceError:
@@ -95,7 +96,7 @@ class LostItems(Resource):
 
 # @ns.route("/lost/<item_id>")
 class LostSingleItem(Resource):
-    @ns.marshal_with(itemFetchModel)
+    # @ns.marshal_with(itemFetchModel)
     @ns.doc(
         description="Fetch owners items.",
         params={},
@@ -110,10 +111,10 @@ class LostSingleItem(Resource):
     @authenticate
     def get(self, item_id):
         try:
-            return lost_items.get_id(item_id)
+            item = lost_items.get_id(item_id)
+            return marshal(item, itemFetchModel), 200
         except SQLAlchemyError:
             abort(404, "No result.")
-
 
     @ns.doc(
         description="Update record of item.",

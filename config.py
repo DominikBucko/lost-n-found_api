@@ -1,6 +1,7 @@
 import yaml
 from misc import ObjectView
 
+key = 'super-secret'
 
 config = ObjectView({})
 

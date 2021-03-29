@@ -1,11 +1,17 @@
 from flask import request, json
+from sqlalchemy.exc import SQLAlchemyError, NoReferenceError
+
 from auth.auth import authenticate
 from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, marshal_with, abort, marshal
+from views.user import get_id, create_new, update
 import logging
+
+# # TODO DELETE THIS
+# from auth.encode_decode_token import decode, encode
 
 
 logger = logging.getLogger(__name__)
-ns = Namespace("user", description="Endpoints for user management", url_prefix="/api")
+ns = Namespace("users", description="Endpoints for user management", url_prefix="/api")
 
 messageModel = ns.model(
     "message",
@@ -14,8 +20,8 @@ messageModel = ns.model(
     },
 )
 
-userModel = ns.model(
-    "User",
+userCreateModel = ns.model(
+    "createUser",
     {
         "email": fields.String,
         "name": fields.String,
@@ -24,7 +30,18 @@ userModel = ns.model(
     }
 )
 
-@ns.route("/users")
+userModel = ns.model(
+    "user",
+    {
+        "id": fields.String,
+        "email": fields.String,
+        "name": fields.String,
+        "nickname": fields.String,
+        "telephone": fields.String,
+    }
+)
+
+@ns.route("/")
 class User(Resource):
     @ns.doc(
         description="Create new user.",
@@ -34,14 +51,19 @@ class User(Resource):
             400: "Bad request",
         },
     )
-    @ns.expect(userModel)
+    @ns.expect(userCreateModel)
     @ns.response(200, "OK", messageModel)
     @authenticate
     def post(self):
-        pass
+        try:
+            return create_new(request.get_json())
+        except SQLAlchemyError:
+            abort(400, "Bad request")
+        except NoReferenceError:
+            abort(400, "Non-existent category")
 
 
-@ns.route("/users/<uid>")
+@ns.route("/<uid>")
 class SpecificUser(Resource):
     @ns.doc(
         description="Fetch user.",
@@ -57,7 +79,16 @@ class SpecificUser(Resource):
     @ns.response(200, "OK", userModel)
     @authenticate
     def get(self, uid):
-        pass
+        try:
+            # # TODO DELETE THIS
+            # payload = {"sub": "1234567890", "id": "test_id2", "iat": 1516239022}
+            # token = encode(payload)
+            # decode(token)
+
+            user = get_id(uid)
+            return marshal(user, userModel), 200
+        except SQLAlchemyError:
+            abort(404, "No result.")
 
     @ns.doc(
         description="Update user.",
@@ -71,7 +102,13 @@ class SpecificUser(Resource):
         },
     )
     @ns.response(200, "OK", userModel)
-    @ns.expect(userModel)
+    @ns.expect(userCreateModel)
     @authenticate
     def patch(self, uid):
-        pass
+        try:
+            user = update(uid, request.get_json())
+            return marshal(user, userModel), 200
+        except SQLAlchemyError:
+            abort(400, "Bad request")
+        except NoReferenceError:
+            abort(400, "Non-existent category")

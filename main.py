@@ -37,9 +37,9 @@ if __name__ == '__main__':
     # TODO zakomentuj ked nechces pustat migrations
     # make_migrations()
     # migrate()
-
-    # DB FILL
+    #
+    # # DB FILL
     # fill_db()
 
     initialize_api()
-    app.run(host="::", port=config.config.port)
+    app.run(host="127.0.0.1", port=config.config.port)

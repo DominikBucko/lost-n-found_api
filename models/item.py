@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-from marshmallow import Schema
+from marshmallow import Schema, fields
 from db import Base
 import enum
 import uuid
@@ -33,12 +33,15 @@ class Item(Base):
     images = relationship("Image")
     category = Column(String, ForeignKey("category.name"))
     status = Column(Enum(ItemStatus))
-    owner_id = Column(String, ForeignKey("users.email"))
+    owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    # matches = relationship("Matches")
+    # lost = relationship("Matches", back_populates="lost")
+    # found = relationship("Matches", back_populates="found")
 
 
 class ItemSchema(Schema):
+
     class Meta:
-        # model = Item
         fields = ('id', 'title', 'description', 'latitude', 'longitude', 'type',
                   'images', 'category', 'status', 'owner_id')
 

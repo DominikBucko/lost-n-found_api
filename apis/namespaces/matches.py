@@ -3,6 +3,7 @@ from auth.auth import authenticate
 from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, marshal_with, abort, marshal
 import logging
 from .lost_items import itemFetchModel
+from views.matches import get_all, get_id, patch
 
 logger = logging.getLogger(__name__)
 ns = Namespace("items/matches", description="API for management of found items", url_prefix="/api")
@@ -11,19 +12,28 @@ ns = Namespace("items/matches", description="API for management of found items",
 matchesFetchModel = ns.model(
     "match",
     {
-        "item 1": fields.Nested(itemFetchModel),
-        "item 2": fields.Nested(itemFetchModel),
+        "id": fields.String(),
+        "lost": fields.Nested(itemFetchModel),
+        "found": fields.Nested(itemFetchModel),
         "status": fields.String(),
         "percentage": fields.Float()
     }
 )
 
 matchesBulkFetchModel = ns.model(
-    "items",
+    "matches",
     {
-        "items": fields.List(fields.Nested(matchesFetchModel))
+        "matches": fields.List(fields.Nested(matchesFetchModel))
     }
 )
+
+matchesPatchModel = ns.model(
+    "patch_status",
+    {
+        "status": fields.String(),
+    }
+)
+
 
 class MatchItem(Resource):
     @ns.doc(
@@ -40,7 +50,12 @@ class MatchItem(Resource):
 
     @authenticate
     def get(self):
-        pass
+        matches = get_all()
+        print(matches)
+        if not matches:
+            return {"matches": []}
+        return marshal({"matches": matches}, matchesBulkFetchModel), 200
+
 
 class MatchSingleItem(Resource):
     @ns.doc(
@@ -56,7 +71,10 @@ class MatchSingleItem(Resource):
     @ns.response(200, "OK", matchesFetchModel)
     @authenticate
     def get(self, item_id):
-        pass
+        match = get_id(item_id)
+        if not match:
+            return {"matches": []}
+        return marshal(match, matchesFetchModel), 200
 
     @ns.doc(
         description="Update record of match.",
@@ -69,10 +87,14 @@ class MatchSingleItem(Resource):
         },
     )
     @ns.response(200, "OK", matchesFetchModel)
-    @ns.expect(matchesFetchModel)
+    @ns.expect(matchesPatchModel)
     @authenticate
     def patch(self, item_id):
-        pass
+        match = patch(item_id, request.get_json()["status"])
+        if not match:
+            return {"matches": []}
+        return marshal(match, matchesFetchModel), 200
+
 
 ns.add_resource(MatchItem, "")
 ns.add_resource(MatchSingleItem, "/<item_id>")
