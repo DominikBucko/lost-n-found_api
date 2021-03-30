@@ -1,6 +1,7 @@
 import config
 from app import app, initialize_api
 from db import Base, engine
+import os
 from fill_db import fill_db
 from models import user, image, item, matches
 
@@ -30,8 +31,6 @@ def create_db():
 
 
 if __name__ == '__main__':
-    config.load_config("config.yaml")
-
     create_db()
 
     # TODO zakomentuj ked nechces pustat migrations

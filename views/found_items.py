@@ -23,8 +23,12 @@ def get_all():
         # print(items_schema.dump(items))
     except Exception:
         return {}
+    # return [item.as_dict() for item in items]
+    item_dict = items_schema.dump(items)
+    for item in item_dict:
+        item["images"] = [image.id for image in item["images"]]
 
-    return items_schema.dump(items)
+    return item_dict
 
 
 

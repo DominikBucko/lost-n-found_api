@@ -21,7 +21,9 @@ class ItemStatus(enum.Enum):
 class Item(Base):
 
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        item = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        item["images"] = [image.id for image in item["images"]]
+
 
     __tablename__ = "items"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)

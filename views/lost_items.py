@@ -22,7 +22,11 @@ def get_all():
     except Exception:
         return {}
 
-    return items_schema.dump(items)
+    item_dict = items_schema.dump(items)
+    for item in item_dict:
+        item["images"] = [image.id for image in item["images"]]
+
+    return item_dict
 
 
 def create_new(data):

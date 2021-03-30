@@ -1,5 +1,5 @@
 from flask import request, json
-from auth.auth import authenticate
+from auth.authentication import authenticate
 from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, marshal_with, abort, marshal
 import logging
 from sqlalchemy.exc import *

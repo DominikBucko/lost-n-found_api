@@ -1,1 +1,3 @@
 port: 8082
+upload_folder: dev_uploads
+max_upload_size: 16777216
