@@ -69,7 +69,7 @@ class Download(Resource):
         if not check_read_permissions(item_id):
             abort(403, "Unauthorized")
         if not files.check_file_ownership(filename, item_id):
-            abort(403, "Unauthorized")
+            abort(404, "File not found")
 
         try:
             return send_file(os.path.join(config.upload_folder, filename))
