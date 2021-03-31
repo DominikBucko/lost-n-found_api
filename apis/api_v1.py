@@ -5,6 +5,7 @@ from apis.namespaces.found_items import ns as found_items
 from apis.namespaces.matches import ns as matches
 from apis.namespaces.uploads import ns as uploads
 from apis.namespaces.user import ns as user
+from apis.namespaces.metadata import ns as metadata
 
 blueprint = Blueprint("v1", __name__, url_prefix="/api")
 
@@ -20,3 +21,4 @@ def init(app):
     api.add_namespace(matches)
     api.add_namespace(uploads)
     api.add_namespace(user)
+    api.add_namespace(metadata)

@@ -1,7 +1,8 @@
 from functools import wraps
+from .encode_decode_token import decode, encode
 import os
 # from rauth import OAuth2Service
-# from flask import request, abort, g
+from flask import request, abort, g
 #
 # from flask import url_for, current_app, redirect, request
 # from rauth import OAuth2Service
@@ -74,11 +75,17 @@ import os
 #         return (me['name'],
 #                 me['email'])
 
+print(encode({"email": "test@email.com"}))
 
 def authenticate(f):
     @wraps(f)
     def wrap(*args, **kwargs):
         # PLACEHOLDER
+        try:
+            decoded = decode(request.headers.get("Authorization").split("Bearer ")[-1])
+            g.user_id = decoded["email"]
+        except Exception:
+            abort(401)
         return f(*args, **kwargs)
     return wrap
 
