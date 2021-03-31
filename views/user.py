@@ -1,14 +1,14 @@
 from sqlalchemy.orm import sessionmaker
 from db import Base, engine
 from models.user import User, UserSchema
-
+from flask import g
 Session = sessionmaker(bind=engine)
 
 
 def create_new(data):
     session = Session()
     user_schema = UserSchema(many=False)
-
+    data["id"] = g.user_id
     user = User(**data)
     session.add(user)
     session.commit()

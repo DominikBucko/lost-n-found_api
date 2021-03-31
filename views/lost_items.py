@@ -8,7 +8,7 @@ from models.matches import Matches
 from misc import get_distance
 from models.category import Category
 # from models.category import Category
-from flask import Response, request
+from flask import Response, request, g
 from sqlalchemy.orm import sessionmaker
 from db import Base, engine
 import json
@@ -37,6 +37,7 @@ def create_new(data):
     item_schema = ItemSchema(many=False)
     data["type"] = "lost"
     data["status"] = "open"
+    data["owner_id"] = g.user_id
     item = Item(**data)
     #
     # for image in images:

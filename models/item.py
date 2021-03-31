@@ -34,7 +34,7 @@ class Item(Base):
     images = relationship("Image")
     category = Column(String, ForeignKey("category.name"))
     status = Column(Enum(ItemStatus))
-    owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    owner_id = Column(String, ForeignKey("users.id"))
 
 
 class ItemSchema(Schema):

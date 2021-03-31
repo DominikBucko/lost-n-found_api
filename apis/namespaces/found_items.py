@@ -50,7 +50,8 @@ class FoundItems(Resource):
         try:
             item = found_items.create_new(request.get_json())
             return marshal(item, itemFetchModel), 200
-        except SQLAlchemyError:
+        except SQLAlchemyError as e:
+            logging.error(e)
             abort(400, "Bad request")
         except NoReferenceError:
             abort(400, "Non-existent category")

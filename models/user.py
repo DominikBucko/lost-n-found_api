@@ -11,7 +11,7 @@ class User(Base):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     __tablename__ = "users"
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(String, primary_key=True)
     email = Column(String)
     name = Column(String)
     nickname = Column(String)
