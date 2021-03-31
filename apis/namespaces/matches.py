@@ -90,6 +90,7 @@ class MatchSingleItem(Resource):
     @ns.expect(matchesPatchModel)
     @authenticate
     def patch(self, item_id):
+        
         try:
             match = patch(item_id, request.get_json()["status"])
             if not match:

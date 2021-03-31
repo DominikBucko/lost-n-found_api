@@ -1,5 +1,6 @@
 from flask import request, json
 from auth.authentication import authenticate
+from auth.authorization import check_write_permissions, check_read_permissions
 from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, marshal_with, abort, marshal
 import logging
 from sqlalchemy.exc import *
@@ -73,6 +74,8 @@ class FoundSingleItem(Resource):
     @ns.response(200, "OK", itemFetchModel)
     @authenticate
     def get(self, item_id):
+        if not check_read_permissions(item_id):
+            abort(403, "Unauthorized")
         try:
             item = found_items.get_id(item_id)
             return marshal(item, itemFetchModel), 200
@@ -94,6 +97,8 @@ class FoundSingleItem(Resource):
     @ns.expect(itemCreateModel)
     @authenticate
     def patch(self, item_id):
+        if not check_write_permissions(item_id):
+            abort(403, "Unauthorized")
         try:
             item = update(item_id, request.get_json())
             return marshal(item, itemFetchModel), 200
@@ -113,6 +118,8 @@ class FoundSingleItem(Resource):
     @ns.response(200, "OK", messageModel)
     @authenticate
     def delete(self, item_id):
+        if not check_write_permissions(item_id):
+            abort(403, "Unauthorized")
         try:
             return delete(item_id)
         except SQLAlchemyError:

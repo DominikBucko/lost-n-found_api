@@ -34,11 +34,11 @@ if __name__ == '__main__':
     create_db()
 
     # TODO zakomentuj ked nechces pustat migrations
-    # make_migrations()
-    # migrate()
+    make_migrations()
+    migrate()
     #
     # # DB FILL
-    # fill_db()
+    fill_db()
 
     initialize_api()
     app.run(host="127.0.0.1", port=config.config.port)

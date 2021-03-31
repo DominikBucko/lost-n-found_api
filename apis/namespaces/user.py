@@ -1,4 +1,4 @@
-from flask import request, json
+from flask import request, json, g
 from sqlalchemy.exc import SQLAlchemyError, NoReferenceError
 
 from auth.authentication import authenticate
@@ -80,6 +80,8 @@ class SpecificUser(Resource):
     @ns.response(200, "OK", userModel)
     @authenticate
     def get(self, uid):
+        if uid != g.item_id:
+            abort(403, "Unauthorized")
         try:
             # # TODO DELETE THIS
             # payload = {"sub": "1234567890", "id": "test_id2", "iat": 1516239022}
@@ -106,6 +108,9 @@ class SpecificUser(Resource):
     @ns.expect(userCreateModel)
     @authenticate
     def patch(self, uid):
+        if uid != g.item_id:
+            abort(403, "Unauthorized")
+
         try:
             user = update(uid, request.get_json())
             return marshal(user, userModel), 200

@@ -25,9 +25,7 @@ class Metadata(Resource):
             401: "Unauthorized",
         },
     )
-    @authenticate
     def get(self):
         res = {}
         res["categories"] = metadata.get_categories()
         return res
-
