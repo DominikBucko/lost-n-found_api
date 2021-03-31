@@ -17,7 +17,6 @@ class ItemStatus(enum.Enum):
     resolved = 2
     Tested = 3
 
-
 class Item(Base):
 
     def as_dict(self):
