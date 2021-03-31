@@ -36,9 +36,6 @@ class Item(Base):
     category = Column(String, ForeignKey("category.name"))
     status = Column(Enum(ItemStatus))
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
-    # matches = relationship("Matches")
-    # lost = relationship("Matches", back_populates="lost")
-    # found = relationship("Matches", back_populates="found")
 
 
 class ItemSchema(Schema):

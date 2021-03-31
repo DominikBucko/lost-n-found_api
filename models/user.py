@@ -16,7 +16,7 @@ class User(Base):
     name = Column(String)
     nickname = Column(String)
     telephone = Column(String)
-    lost_item = relationship("Item")
+    item = relationship("Item")
 
 class UserSchema(Schema):
     class Meta:

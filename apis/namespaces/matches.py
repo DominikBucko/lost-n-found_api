@@ -90,10 +90,13 @@ class MatchSingleItem(Resource):
     @ns.expect(matchesPatchModel)
     @authenticate
     def patch(self, item_id):
-        match = patch(item_id, request.get_json()["status"])
-        if not match:
-            return {"matches": []}
-        return marshal(match, matchesFetchModel), 200
+        try:
+            match = patch(item_id, request.get_json()["status"])
+            if not match:
+                return {"matches": []}
+            return marshal(match, matchesFetchModel), 200
+        except:
+            abort(404, "No result.")
 
 
 ns.add_resource(MatchItem, "")

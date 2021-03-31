@@ -1,3 +1,5 @@
+from sqlalchemy.exc import SQLAlchemyError
+
 from models.item import Item\
     , ItemSchema, ItemStatus, ItemType
 
@@ -69,3 +71,34 @@ def find_matches(item):
             session.add(match)
 
     session.commit()
+
+
+def update(id, data):
+    session = Session()
+    item_schema = ItemSchema(many=False)
+    item = session.query(Item).get(id)
+    if item.type == ItemType.lost:
+        if 'title' in data.keys():
+            item.title = data['title']
+        if 'description' in data.keys():
+            item.description = data['description']
+        if 'latitude' in data.keys():
+            item.latitude = data['latitude']
+        if 'longitude' in data.keys():
+            item.longitude = data['longitude']
+        if 'category' in data.keys():
+            item.category = data['category']
+        session.commit()
+        return item_schema.dump(item)
+    else:
+        raise SQLAlchemyError
+
+def delete(id):
+    session = Session()
+    item = session.query(Item).get(id)
+    if item.type == ItemType.lost:
+        session.delete(item)
+        session.commit()
+        return True
+    else:
+        raise SQLAlchemyError

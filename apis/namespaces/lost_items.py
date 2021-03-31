@@ -7,6 +7,8 @@ from views import lost_items
 from sqlalchemy.exc import *
 from sqlalchemy.orm.exc import NoResultFound
 
+from views.lost_items import update, delete
+
 logger = logging.getLogger(__name__)
 ns = Namespace("items/lost", description="API for management of lost items", url_prefix="/api")
 
@@ -130,7 +132,11 @@ class LostSingleItem(Resource):
     @ns.expect(itemCreateModel)
     @authenticate
     def patch(self, item_id):
-        pass
+        try:
+            item = update(item_id, request.get_json())
+            return marshal(item, itemFetchModel), 200
+        except SQLAlchemyError:
+            abort(404, "No result.")
 
     @ns.doc(
         description="Delete record of item.",
@@ -145,7 +151,10 @@ class LostSingleItem(Resource):
     @ns.response(200, "OK", messageModel)
     @authenticate
     def delete(self, item_id):
-        pass
+        try:
+            return delete(item_id)
+        except SQLAlchemyError:
+            abort(404, "No result.")
 
 
 ns.add_resource(LostItems, "")

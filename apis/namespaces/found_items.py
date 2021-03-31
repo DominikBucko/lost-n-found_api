@@ -4,6 +4,7 @@ from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, ma
 import logging
 from sqlalchemy.exc import *
 from views import found_items
+from views.found_items import update, delete
 from .lost_items import itemFetchModel, itemCreateModel, itemBulkFetchModel, messageModel
 
 logger = logging.getLogger(__name__)
@@ -92,7 +93,11 @@ class FoundSingleItem(Resource):
     @ns.expect(itemCreateModel)
     @authenticate
     def patch(self, item_id):
-        pass
+        try:
+            item = update(item_id, request.get_json())
+            return marshal(item, itemFetchModel), 200
+        except SQLAlchemyError:
+            abort(404, "No result.")
 
     @ns.doc(
         description="Delete record of item.",
@@ -107,7 +112,10 @@ class FoundSingleItem(Resource):
     @ns.response(200, "OK", messageModel)
     @authenticate
     def delete(self, item_id):
-        pass
+        try:
+            return delete(item_id)
+        except SQLAlchemyError:
+            abort(404, "No result.")
 
 
 ns.add_resource(FoundItems, "")
