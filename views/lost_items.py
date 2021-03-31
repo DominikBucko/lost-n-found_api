@@ -13,6 +13,7 @@ from sqlalchemy.orm import sessionmaker
 from db import Base, engine
 import json
 
+
 Session = sessionmaker(bind=engine)
 
 
@@ -92,6 +93,7 @@ def update(id, data):
         return item_schema.dump(item)
     else:
         raise SQLAlchemyError
+
 
 def delete(id):
     session = Session()
