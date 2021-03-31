@@ -23,10 +23,13 @@ def check_write_permissions(item):
 
 
 def check_read_permissions(item):
+    if check_write_permissions(item):
+        return True
+
     session = Session()
     matches = session.query(Matches).filter(or_(Matches.found_id == item, Matches.lost_id == item))
     for match in matches:
-        if match.found_id == g.user_id or match.lost_id == g.user_id:
+        if match.found.owner_id == g.user_id or match.lost.owner_id == g.user_id:
             return True
 
     return False

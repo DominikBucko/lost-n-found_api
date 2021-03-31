@@ -57,7 +57,8 @@ class User(Resource):
     def post(self):
         try:
             return create_new(request.get_json())
-        except SQLAlchemyError:
+        except SQLAlchemyError as e:
+            logging.error(e)
             abort(400, "Bad request")
         except NoReferenceError:
             abort(400, "Non-existent category")

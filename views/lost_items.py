@@ -20,7 +20,7 @@ Session = sessionmaker(bind=engine)
 def get_all():
     session = Session()
     try:
-        items = session.query(Item).filter(Item.type == ItemType.lost)
+        items = session.query(Item).filter(Item.type == ItemType.lost, Item.owner_id == g.user_id)
         items_schema = ItemSchema(many=True)
     except Exception:
         return {}
