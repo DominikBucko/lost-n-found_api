@@ -64,7 +64,7 @@ def find_matches(item):
     session = Session()
     res = session.query(Item).filter(Item.category == item.category,
                                      Item.status == ItemStatus.open,
-                                     Item.type == ItemType.found)
+                                     Item.type == ItemType.lost)
     for row in res:
         distance = get_distance(item.latitude, item.longitude, row.latitude, row.longitude)
         if distance < 500:

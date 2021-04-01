@@ -63,7 +63,7 @@ def find_matches(item):
     session = Session()
     res = session.query(Item).filter(Item.category == item.category,
                                      Item.status == ItemStatus.open,
-                                     Item.type == ItemType.lost
+                                     Item.type == ItemType.found
                                      )
     # res = session.query(Item).all()
     for row in res:

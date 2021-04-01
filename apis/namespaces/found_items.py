@@ -122,7 +122,8 @@ class FoundSingleItem(Resource):
             abort(403, "Unauthorized")
         try:
             return delete(item_id)
-        except SQLAlchemyError:
+        except SQLAlchemyError as e:
+            logging.error(e)
             abort(404, "No result.")
 
 

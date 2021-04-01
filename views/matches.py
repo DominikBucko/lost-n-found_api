@@ -9,11 +9,8 @@ Session = sessionmaker(bind=engine)
 
 def get_all():
     session = Session()
-    try:
-        matches = session.query(Matches).filter(or_(Matches.lost.owner_id == g.user_id, Matches.found.owner_id == g.user_id))
-        matches_schema = MatchesSchema(many=True)
-    except Exception:
-        return {}
+    matches = session.query(Matches).filter(or_(Matches.lost.has(owner_id=g.user_id), Matches.found.has(owner_id=g.user_id)))
+    matches_schema = MatchesSchema(many=True)
 
     return matches_schema.dump(matches)
 
