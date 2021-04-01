@@ -80,7 +80,7 @@ class SpecificUser(Resource):
     @ns.response(200, "OK", userModel)
     @authenticate
     def get(self, uid):
-        if uid != g.item_id:
+        if uid != g.user_id:
             abort(403, "Unauthorized")
         try:
             # # TODO DELETE THIS
@@ -108,7 +108,7 @@ class SpecificUser(Resource):
     @ns.expect(userCreateModel)
     @authenticate
     def patch(self, uid):
-        if uid != g.item_id:
+        if uid != g.user_id:
             abort(403, "Unauthorized")
 
         try:
