@@ -49,7 +49,7 @@ class Upload(Resource):
             filename = secure_filename(f"{uuid.uuid4()}.{file.filename.split('.')[-1]}")
             file.save(os.path.join(config.upload_folder, filename))
             files.register_file(filename=filename, item=item_id)
-            return {"message": "File uploaded successfully."}
+            return {"message": f"{filename}"}
 
 @ns.route("/download/<item_id>/<filename>")
 class Download(Resource):
