@@ -41,4 +41,4 @@ if __name__ == '__main__':
     # fill_db()
 
     initialize_api()
-    app.run(host="127.0.0.1", port=config.config.port)
+    app.run(host="0.0.0.0", port=config.config.port)

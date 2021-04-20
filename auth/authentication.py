@@ -1,18 +1,27 @@
 from functools import wraps
-from .encode_decode_token import decode, encode
+import requests
+from config import config
+import json
 import os
 from flask import request, abort, g
 
-print(encode({"email": "test_user1@email.com"}))
-print(encode({"email": "test_user2@email.com"}))
 
 def authenticate(f):
     @wraps(f)
     def wrap(*args, **kwargs):
-        # PLACEHOLDER
         try:
-            decoded = decode(request.headers.get("Authorization").split("Bearer ")[-1])
-            g.user_id = decoded["email"]
+            jwt = request.headers.get("Authorization").split("Bearer ")[-1]
+
+            payload = json.dumps({"token": jwt})
+            headers = {
+                'Authorization': config.auth_server_token,
+                'Content-Type': 'application/json'
+            }
+
+            response = requests.request("POST", config.auth_server_url, headers=headers, data=payload)
+            data = response.json()
+            g.user_id = data["email"]
+
         except Exception:
             abort(401)
         return f(*args, **kwargs)

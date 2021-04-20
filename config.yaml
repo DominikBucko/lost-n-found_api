@@ -1,3 +1,5 @@
 port: 8082
 upload_folder: dev_uploads
 max_upload_size: 16777216
+auth_server_url: http://35.246.215.234:38777/validate-token
+auth_server_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoibG9zdC1hbmQtZm91bmQifQ.fjCIrc1_aERHYMy0YDNsyqxhPt5y87xt6UPVoafv2iU
