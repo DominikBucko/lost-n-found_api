@@ -41,7 +41,8 @@ userModel = ns.model(
     }
 )
 
-@ns.route("/")
+
+@ns.route("")
 class User(Resource):
     @ns.doc(
         description="Create new user.",
