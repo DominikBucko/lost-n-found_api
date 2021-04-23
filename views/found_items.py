@@ -50,14 +50,18 @@ def create_new(data):
     session.commit()
     find_matches(item)
     # return item.as_dict()
-    return item_schema.dump(item)
+    dump = item_schema.dump(item)
+    dump["images"] = [image.id for image in item["images"]]
+    return dump
 
 
 def get_id(id):
     session = Session()
     item_schema = ItemSchema(many=False)
     item = session.query(Item).get(id)
-    return item_schema.dump(item)
+    dump = item_schema.dump(item)
+    dump["images"] = [image.id for image in item["images"]]
+    return dump
 
 
 def find_matches(item):
