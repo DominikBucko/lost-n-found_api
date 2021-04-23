@@ -12,8 +12,15 @@ def get_all():
     matches = session.query(Matches).filter(or_(Matches.lost.has(owner_id=g.user_id), Matches.found.has(owner_id=g.user_id)))
     matches_schema = MatchesSchema(many=True)
 
-    return matches_schema.dump(matches)
+    dump = matches_schema.dump(matches)
 
+    for match in dump:
+        if match["lost"]["images"]:
+            match["lost"]["images"] = [image.id for image in match["lost"]["images"]]
+        if match["found"]["images"]:
+            match["found"]["images"] = [image.id for image in match["found"]["images"]]
+
+    return dump
 
 def get_id(id):
     session = Session()
@@ -21,7 +28,13 @@ def get_id(id):
     if not (match.lost.owner_id == g.user_id or match.found.owner_id == g.user_id):
         abort(404, "Not found")
     matches_schema = MatchesSchema(many=False)
-    return matches_schema.dump(match)
+    match = matches_schema.dump(match)
+    if match["lost"]["images"]:
+        match["lost"]["images"] = [image.id for image in match["lost"]["images"]]
+    if match["found"]["images"]:
+        match["found"]["images"] = [image.id for image in match["found"]["images"]]
+
+    return match
 
 
 def patch(id, status):
@@ -32,4 +45,9 @@ def patch(id, status):
     matches_schema = MatchesSchema(many=False)
     match.status = status
     session.commit()
-    return matches_schema.dump(match)
+    match = matches_schema.dump(match)
+    if match["lost"]["images"]:
+        match["lost"]["images"] = [image.id for image in match["lost"]["images"]]
+    if match["found"]["images"]:
+        match["found"]["images"] = [image.id for image in match["found"]["images"]]
+    return match
