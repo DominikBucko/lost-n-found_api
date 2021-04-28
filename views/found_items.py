@@ -37,6 +37,8 @@ def get_all():
 def create_new(data):
     session = Session()
     item_schema = ItemSchema(many=False)
+    if data.get("id"):
+        data.pop("id")
     data["type"] = "found"
     data["status"] = "open"
     data["owner_id"] = g.user_id
@@ -51,7 +53,7 @@ def create_new(data):
     find_matches(item)
     # return item.as_dict()
     dump = item_schema.dump(item)
-    dump["images"] = [image.id for image in item["images"]]
+    # dump["images"] = [image.id for image in item.images]
     return dump
 
 
@@ -60,7 +62,7 @@ def get_id(id):
     item_schema = ItemSchema(many=False)
     item = session.query(Item).get(id)
     dump = item_schema.dump(item)
-    dump["images"] = [image.id for image in item["images"]]
+    dump["images"] = [image.id for image in item.images]
     return dump
 
 
