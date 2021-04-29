@@ -9,7 +9,8 @@ Session = sessionmaker(bind=engine)
 
 def get_all():
     session = Session()
-    matches = session.query(Matches).filter(or_(Matches.lost.has(owner_id=g.user_id), Matches.found.has(owner_id=g.user_id)))
+    matches = session.query(Matches).filter(Matches.found.has(owner_id=g.user_id),
+                                            Matches.status == "open")
     matches_schema = MatchesSchema(many=True)
 
     dump = matches_schema.dump(matches)
@@ -25,7 +26,7 @@ def get_all():
 def get_id(id):
     session = Session()
     match = session.query(Matches).get(id)
-    if not (match.lost.owner_id == g.user_id or match.found.owner_id == g.user_id):
+    if not (match.found.owner_id == g.user_id):
         abort(404, "Not found")
     matches_schema = MatchesSchema(many=False)
     match = matches_schema.dump(match)

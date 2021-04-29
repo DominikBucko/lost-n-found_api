@@ -37,10 +37,27 @@ def create_new(data):
     item_schema = ItemSchema(many=False)
     if data.get("id"):
         data.pop("id")
-    data["type"] = "lost"
-    data["status"] = "open"
-    data["owner_id"] = g.user_id
-    item = Item(**data)
+    # print(data)
+
+    item = Item()
+
+    item.type = "lost"
+    item.status = "open"
+    item.owner_id = g.user_id
+    # item = Item(**data)
+
+    if 'title' in data.keys():
+        item.title = data['title']
+    if 'description' in data.keys():
+        item.description = data['description']
+    if 'category' in data.keys():
+        item.category = data['category']
+    if 'longitude' in data.keys():
+        item.longitude = data['longitude']
+    if 'latitude' in data.keys():
+        item.latitude = data['latitude']
+
+
     #
     # for image in images:
     #     # TODO, update item_id-s in image
@@ -70,13 +87,14 @@ def find_matches(item):
     session = Session()
     res = session.query(Item).filter(Item.category == item.category,
                                      Item.status == ItemStatus.open,
-                                     Item.type == ItemType.found
+                                     Item.type == ItemType.found,
+                                     Item.owner_id != item.owner_id,
                                      )
     # res = session.query(Item).all()
     for row in res:
         distance = get_distance(item.latitude, item.longitude, row.latitude, row.longitude)
         if distance < 500:
-            match = Matches(found_id=row.id, lost_id=item.id, percentage=(100 - distance/10))
+            match = Matches(found_id=row.id, lost_id=item.id, percentage=(100 - distance/10), status="open")
             session.add(match)
 
     session.commit()
