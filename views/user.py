@@ -2,6 +2,7 @@ from sqlalchemy.orm import sessionmaker
 from db import Base, engine
 from models.user import User, UserSchema
 from flask import g
+from sqlalchemy.exc import SQLAlchemyError
 Session = sessionmaker(bind=engine)
 
 
@@ -20,6 +21,8 @@ def get_id(id):
     user_schema = UserSchema(many=False)
 
     user = session.query(User).get(id)
+    if not user:
+        raise SQLAlchemyError
     return user_schema.dump(user)
 
 

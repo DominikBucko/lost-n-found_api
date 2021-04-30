@@ -96,7 +96,7 @@ class MatchSingleItem(Resource):
             if not match:
                 return {"matches": []}
             return marshal(match, matchesFetchModel), 200
-        except:
+        except :
             abort(404, "No result.")
 
 

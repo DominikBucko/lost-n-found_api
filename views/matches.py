@@ -9,7 +9,7 @@ Session = sessionmaker(bind=engine)
 
 def get_all():
     session = Session()
-    matches = session.query(Matches).filter(or_(Matches.lost.has(owner_id=g.user_id), Matches.found.has(owner_id=g.user_id)))
+    matches = session.query(Matches).filter(Matches.status == "open", or_(Matches.lost.has(owner_id=g.user_id), Matches.found.has(owner_id=g.user_id)))
     matches_schema = MatchesSchema(many=True)
 
     dump = matches_schema.dump(matches)
@@ -44,6 +44,11 @@ def patch(id, status):
         abort(403, "Unauthorized")
     matches_schema = MatchesSchema(many=False)
     match.status = status
+    if match.status == "resolved":
+        match.lost.status = status
+        match.found.status = status
+
+    session.add(match)
     session.commit()
     match = matches_schema.dump(match)
     if match["lost"]["images"]:
