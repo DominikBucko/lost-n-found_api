@@ -9,10 +9,16 @@ open_connections = {}
 
 socketio = SocketIO(app)
 
+@socketio.on('connect')
+def test_connect():
+    print("someone connected")
+    # socketio.emit('my response', {'data': 'Connected'})
+
 
 # @cross_origin
 @socketio.on("authenticate")
 def authenticate_socket(data):
+    # print("AUTHENTIFICATION IN PROGRES")
     email = check_jwt(data)
     if email:
         open_connections[email] = request.sid

@@ -7,11 +7,14 @@ chardet==4.0.0
 click==7.1.2
 colorama==0.4.4
 cors==0.9.7
+dnspython==1.16.0
+eventlet==0.31.0
 filelock==3.0.12
 Flask==1.1.2
 Flask-Cors==3.0.10
 flask-marshmallow==0.14.0
 flask-restx==0.2.0
+Flask-SocketIO==4.3.2
 Flask-SQLAlchemy==2.4.4
 future==0.18.2
 gevent==21.1.2
@@ -31,6 +34,8 @@ PyJWT==2.0.1
 pyrsistent==0.17.3
 python-dateutil==2.8.1
 python-editor==1.0.4
+python-engineio==3.14.2
+python-socketio==4.6.1
 pytz==2021.1
 PyYAML==5.4.1
 requests==2.25.1
