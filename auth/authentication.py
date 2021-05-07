@@ -31,7 +31,7 @@ def authenticate(f):
 
 def check_jwt(jwt):
     try:
-        payload = json.dumps({"token": jwt})
+        payload = json.dumps({"token": jwt.split("Bearer ")[-1]})
         headers = {
             'Authorization': config.auth_server_token,
             'Content-Type': 'application/json'

@@ -1,5 +1,6 @@
 import config
 from app import app, initialize_api
+from apis.api_v1 import init
 from sockets import socketio
 from db import Base, engine
 import os
@@ -42,6 +43,7 @@ if __name__ == '__main__':
     # fill_db()
 
     initialize_api()
-    socketio.run(app, host="0.0.0.0", port=config.config.port)
+    init(app)
+    socketio.run(app, host="0.0.0.0", port=config.config.port, debug=True)
     # socketio.run(app, port=8088, debug=True)
 

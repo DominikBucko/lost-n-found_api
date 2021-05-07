@@ -1,4 +1,4 @@
-from flask import request, json
+from flask import request, json, g
 from auth.authentication import authenticate
 from auth.authorization import check_write_permissions, check_read_permissions
 from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, marshal_with, abort, marshal
@@ -6,6 +6,7 @@ import logging
 from sqlalchemy.exc import *
 from views import found_items
 from views.found_items import update, delete
+from sockets import notify
 from .lost_items import itemFetchModel, itemCreateModel, itemBulkFetchModel, messageModel
 
 logger = logging.getLogger(__name__)

@@ -34,7 +34,8 @@ def test_event(data):
 
 
 def notify(uid, json):
-    socketio.emit("notification", json, room=open_connections[uid])
+    if open_connections.get(uid):
+        socketio.emit("notification", json, room=open_connections[uid])
 
 
 # socketio.run(app, port=8085, debug=True)

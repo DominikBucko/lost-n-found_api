@@ -1,9 +1,10 @@
-from flask import request, json
+from flask import request, json, g
 from auth.authentication import authenticate
 from flask_restx import Namespace, Resource, reqparse, fields, Model, fields, marshal_with, abort, marshal
 import logging
 from .lost_items import itemFetchModel
 from views.matches import get_all, get_id, patch
+from sockets import notify
 
 logger = logging.getLogger(__name__)
 ns = Namespace("items/matches", description="API for management of found items", url_prefix="/api")
@@ -51,6 +52,7 @@ class MatchItem(Resource):
     @authenticate
     def get(self):
         matches = get_all()
+
         print(matches)
         if not matches:
             return {"matches": []}

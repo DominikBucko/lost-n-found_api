@@ -1,4 +1,4 @@
-from apis.api_v1 import init
+# from apis.api_v1 import init
 from config import config
 from flask_cors import CORS
 import os
@@ -24,5 +24,5 @@ def apply_configuration():
 
 def initialize_api():
     apply_configuration()
-    init(app)
+    # init(app)
 
