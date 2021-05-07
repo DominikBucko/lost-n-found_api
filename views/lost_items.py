@@ -10,6 +10,7 @@ from models.category import Category
 # from models.category import Category
 from flask import Response, request, g
 from sqlalchemy.orm import sessionmaker
+from sockets_calls import notify_both
 from db import Base, engine
 import json
 
@@ -83,6 +84,7 @@ def find_matches(item):
     for row in res:
         distance = get_distance(item.latitude, item.longitude, row.latitude, row.longitude)
         if distance < 500:
+            notify_both(row.owner_id, item.owner_id, item.title, "lost")
             match = Matches(found_id=row.id, lost_id=item.id, percentage=(100 - distance/10), status="open")
             session.add(match)
 
